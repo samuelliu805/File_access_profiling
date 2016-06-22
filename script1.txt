@@ -1,0 +1,8 @@
+set title "log output"
+set xlabel "files"
+set xtics rotate by 315
+set ylabel "r/w bytes"
+set autoscale
+set offset 1,1,1,1
+plot "log1.txt" using 0:3:xtic(1) with boxes title "operation",\
+     "log1.txt" using 0:3:(sprintf("%d",$2)) with labels point pt 7 offset char 1,1 notitle

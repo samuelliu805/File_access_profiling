@@ -1,0 +1,2 @@
+int getPathType ();
+char* readProgramName();

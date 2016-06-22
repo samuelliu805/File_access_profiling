@@ -1,0 +1,7 @@
+set title "log output"
+set xlabel "starttime"
+set ylabel "duration"
+set autoscale
+set offset 1,1,1,1
+plot "log.txt" using 0:3:xtic(1) title "operation",\
+     "log.txt" using 0:3:(sprintf("%d",$2)) with labels point pt 7 offset char 1,1 notitle
