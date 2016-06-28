@@ -19,15 +19,17 @@ int main (int argc, char * argv[])
         insert(argv[i],root);
     }
     printTree(stdout, root);
-    deleteTree(root);
+//    deleteTree(root);
     return 0;
 }
 
 
 int insert (char * filename, Node* root)
 {
+    if (filename == NULL || !strcmp("", filename)) return 0;
     char * next = filename;
     char * curr = filename;
+    int flag = 0;
     Node * child = NULL;
     while (*curr != '\0')
     {
@@ -35,9 +37,14 @@ int insert (char * filename, Node* root)
         {
             *curr = '\0';
             next = curr + 1;
+            flag = 1;
         }
-        curr++;
+        else 
+        {
+            curr++;
+        }
     }
+    if (!flag) next = NULL;
     
     if ((child = search(filename, root)) == NULL)
     {
@@ -46,6 +53,23 @@ int insert (char * filename, Node* root)
         //CASE 2 -- num_children >= capacity --> realloc (2x) ; add;
         //
         //add    -- malloc node; init vals;   
+        if (root->num_children < root -> capacity)
+        {
+            root->capacity *= 2;
+            root->children = (Node **)realloc(root->children, root->capacity*sizeof(Node*));
+        }
+    
+        Node *newNode = (Node *)malloc(sizeof(Node));
+        newNode->data = filename; 
+        newNode->capacity = INIT_CAPACITY;
+        newNode->num_children = 0;
+        newNode->children = (Node **) malloc(sizeof(Node *) * INIT_CAPACITY);
+        (root->children)[root->num_children] = newNode;
+        root->num_children++;
+        insert(next, newNode);
+
+
+        
     }
     else 
     {
@@ -74,6 +98,12 @@ Node* search (char * filename_rel, Node * curr)
 
 void printTree(FILE * outfp, Node* root)
 {
+    fprintf(outfp, "%s\nchildren: \n", root->data);
+    int i = 0;
+    for (i = 0; i < root->num_children; i++)
+    {
+        printTree (outfp, root->children[i]);
+    }
 
 }
 

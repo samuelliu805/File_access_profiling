@@ -14,7 +14,7 @@ typedef struct treeNode
 } Node;
 
 int insert(char *filename, Node * root);
-Node* search(char *filename, Node ** current);
+Node* search(char *filename, Node * curr);
 void printTree(FILE* outfp, Node * root);
 void deleteTree(Node * root);
 
