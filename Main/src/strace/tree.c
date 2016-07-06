@@ -9,16 +9,33 @@
 #define H_BAR "\342\224\200"
 #define V_BAR "\342\224\202"
 #define BOTTOM "\342\224\224"
+
+/* helper functions */
+static void deleteTree(Node * root);
+static void insert(char *filename, Node * root, int thisLevel);
+static void print (FILE *outfp, char * toPrint, int num);
+static void printPrefix (FILE * outfp, int index);
+static Node* search(char *filename, Node * curr);
+
+
 /* Global Variables */
 int *finished = NULL; // a list keeping track of whether a node has finished printing all its children. 0 for finished and 1 for not
 int finishedCap = 0; // capacity of finished list
 int finishedNum = 0; // number of elements in the finished list
 
 
-void init_var()
+Node *init_var()
 {
     finished = (int *) malloc(sizeof(int) * INIT_CAPACITY);
     finishedCap = INIT_CAPACITY; 
+    Node *root = (Node *)malloc(sizeof(Node));
+    root->data = "";
+    root->num_children = 0;
+    root->capacity = INIT_CAPACITY;
+    root->children = (Node**)malloc(sizeof(Node*) * INIT_CAPACITY);
+    root->level = -1;
+
+    return root;
 }
 
 void clear(Node *root)
@@ -27,7 +44,12 @@ void clear(Node *root)
     free(finished);
 }
 
-void insert (char * filename, Node* root, int thisLevel)
+void insertPath (char * filename, Node *root)
+{
+    insert (filename, root, 0);
+}
+
+static void insert (char * filename, Node* root, int thisLevel)
 {
     if (filename == NULL || !strcmp("", filename)) return ;
     char * next = filename;
@@ -84,8 +106,12 @@ void insert (char * filename, Node* root, int thisLevel)
     return; 
 }
 
-Node* search (char * filename_rel, Node * curr)
+static Node* search (char * filename_rel, Node * curr)
 {
+    if (curr == NULL)
+    {
+        return NULL; 
+    }
     int i = 0;
     Node ** curr_children = curr->children;
     if (curr_children == NULL)
@@ -102,7 +128,7 @@ Node* search (char * filename_rel, Node * curr)
     return NULL;
 }
 
-void print (FILE *outfp, char * toPrint, int num)
+static void print (FILE *outfp, char * toPrint, int num)
 {
     int i = 0;
     for (i = 0; i < num; i++)
@@ -111,7 +137,7 @@ void print (FILE *outfp, char * toPrint, int num)
     }
 }
 
-void printPrefix (FILE * outfp, int index)
+static void printPrefix (FILE * outfp, int index)
 {
 
     int i = 0;
@@ -155,11 +181,14 @@ void printTree(FILE * outfp, Node* root)
         finished = (int *)realloc(finished, finishedCap);
     }
 
-    finished[root->level] = 0;    
-    finishedNum++;
-    printPrefix (outfp, root->level); 
-    print(outfp, root->data, 1);
-    print(outfp, "\n", 1);
+    if (root -> level > 0)
+    {
+        finished[root->level] = 0;    
+        finishedNum++;
+        printPrefix (outfp, root->level); 
+        print(outfp, root->data, 1);
+        print(outfp, "\n", 1);
+    }
     int i = 0;
     for (i = 0; i < root->num_children; i++)
     {
@@ -171,7 +200,7 @@ void printTree(FILE * outfp, Node* root)
     }
 }
 
-void deleteTree(Node * root)
+static void deleteTree(Node * root)
 {
 
     int i = 0;
