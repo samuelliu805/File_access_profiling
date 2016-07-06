@@ -4,17 +4,19 @@
 #include <unistd.h>
 #include "tree.h"
 
+/* defined macros (Currently for printing in Mac OS X)*/
 #define INIT_CAPACITY 10
+#define T_FRAME "\342\224\234"
+#define H_BAR "\342\224\200"
+#define V_BAR "\342\224\202"
+#define BOTTOM "\342\224\224"
 
-void print (FILE *outfp, char * toPrint, int num);
-void printPrefix (FILE * outfp, int index);
+/* Global Variables */
+int *finished = NULL; // a list keeping track of whether a node has finished printing all its children. 0 for finished and 1 for not
+int finishedCap = 0; // capacity of finished list
+int finishedNum = 0; // number of elements in the finished list
 
-
-int level = 0;
-int maxLenIndex = -1;
-int maxLenCap = 0;
-int *maxLen = NULL;
-
+/* main function for demo */
 int main (int argc, char * argv[])
 {
     Node *root = (Node *)malloc(sizeof(Node));
@@ -23,35 +25,30 @@ int main (int argc, char * argv[])
     root->capacity = INIT_CAPACITY;
     root->children = (Node**)malloc(sizeof(Node*) * INIT_CAPACITY);
     root->level = 0;
-    maxLen = (int *) malloc(sizeof(int) * INIT_CAPACITY);
-    maxLenCap = INIT_CAPACITY;
+    finished = (int *) malloc(sizeof(int) * INIT_CAPACITY);
+    finishedCap = INIT_CAPACITY;
     int i = 0;
     for (i = 1; i < argc; i++)
     {
         insert(argv[i],root,0);
     }
 
-    printf ("[");
-    for (i = 0; i <= maxLenIndex; i++)
-    {
-        printf("%d ", maxLen[i]);
-    }
-    printf("]\n");
-    printf("maxLenIndex: %d\n", maxLenIndex);
-   // printPrefix (stdout, 2);
     printTree(stdout, root);
-    //    deleteTree(root);
+    deleteTree(root);
+    free(finished);
     return 0;
 }
 
 
-int insert (char * filename, Node* root, int thisLevel)
+void insert (char * filename, Node* root, int thisLevel)
 {
-    if (filename == NULL || !strcmp("", filename)) return 0;
+    if (filename == NULL || !strcmp("", filename)) return ;
     char * next = filename;
     char * curr = filename;
     int flag = 0;
     Node * child = NULL;
+    
+    // get current directory name or filename
     while (*curr != '\0')
     {
         if (*curr == '/')
@@ -67,19 +64,19 @@ int insert (char * filename, Node* root, int thisLevel)
     }
     if (!flag) next = NULL;
 
+    //if no such directory ever exists, create one
+    //else, recursively create nodes for directory
     if ((child = search(filename, root)) == NULL)
     {
-        //TODO: 
-        //CASE 1 -- num_children < capacity --> add
-        //CASE 2 -- num_children >= capacity --> realloc (2x) ; add;
-        //
-        //add    -- malloc node; init vals;   
+ 
+        // reallocate when children is full 
         if (root->num_children < root -> capacity)
         {
             root->capacity *= 2;
             root->children = (Node **)realloc(root->children, root->capacity*sizeof(Node*));
         }
 
+        // initialization of a new node
         Node *newNode = (Node *)malloc(sizeof(Node));
         newNode->data = filename; 
         newNode->capacity = INIT_CAPACITY;
@@ -90,34 +87,14 @@ int insert (char * filename, Node* root, int thisLevel)
         root->num_children++;
 
 
-        if (maxLenIndex < thisLevel)
-        {
-            if (maxLenCap == maxLenIndex)
-            {
-                maxLen = (int *) realloc(maxLen, 2*maxLenCap);
-                maxLenCap *= 2;
-            }
-            maxLen[thisLevel] = strlen(filename);
-            maxLenIndex++;
-        }
-        else 
-        {
-            if ((int)strlen(filename) > maxLen[thisLevel])
-            {
-                maxLen[thisLevel] = strlen(filename);
-            }
-
-        }
         insert(next, newNode, ++thisLevel);
-
-
 
     }
     else 
     {
         insert(next, child, ++thisLevel);
     }
-    return 0; 
+    return; 
 }
 
 Node* search (char * filename_rel, Node * curr)
@@ -149,73 +126,72 @@ void print (FILE *outfp, char * toPrint, int num)
 
 void printPrefix (FILE * outfp, int index)
 {
+
     int i = 0;
     for (i = 0; i < index; i++)
     {
-        if (i == index - 1) fprintf (outfp, "|");
-        else fprintf (outfp, " ");
         if (i != index - 1)
         {
-            print(outfp, " ", maxLen[i] + 3);
+            if (!finished[i]) 
+            {
+                print (outfp, V_BAR, 1);
+            }
+            else 
+            {
+                print (outfp," ", 1);
+            }
+            print (outfp, " ", 3);
+        }
+        else
+        {
+            if (!finished[i])
+            {
+                print (outfp, T_FRAME, 1);
+            }
+            else 
+            {
+                print (outfp, BOTTOM, 1);
+            }
+            print (outfp, H_BAR, 2);
+            print (outfp, " ", 1);
         }
     }
+
+
 }
 
 void printTree(FILE * outfp, Node* root)
 {
-    /*
-       fprintf(outfp, "%s\nchildren: \n", root->data);
-       int i = 0;
-       for (i = 0; i < root->num_children; i++)
-       {
-       printTree (outfp, root->children[i]);
-       }
-       */
-
-
-    //printf ("data: %s, level: %d, root level %d\n", root->data, level, root->level);
-    if (root->level != 0)
+    if (finishedNum == finishedCap)
     {
-        if (root->level <= level)
-        {
-            printPrefix(outfp, root->level); 
-            print(outfp, "-", maxLen[root->level - 1] + 3);
-        }
-        else
-        {
-            ;
-            //print(outfp, "-", 4);
-        }
-    }
-    //  printf("num_children -- %d\n", root->num_children);
-
-
-    if (root->num_children == 0)
-    {
-        print(outfp, root->data, 1);
-        print(outfp, "\n", 1);
-        level = root->level;
-        return;
-    }
-    else
-    {
-        print(outfp, root->data, 1);
-        level = root->level;
-        if (root->level != 0)
-            print(outfp, "-", maxLen[root->level] - strlen(root->data) + 4);
-        else 
-            print(outfp,"-", 2);
-            
-        int i = 0;
-        for (i = 0; i < root->num_children; i++)
-        {
-            printTree(outfp, root->children[i]);
-        }
+        finishedCap *= 2;
+        finished = (int *)realloc(finished, finishedCap);
     }
 
+    finished[root->level] = 0;    
+    finishedNum++;
+    printPrefix (outfp, root->level); 
+    print(outfp, root->data, 1);
+    print(outfp, "\n", 1);
+    int i = 0;
+    for (i = 0; i < root->num_children; i++)
+    {
+        if (i == root->num_children - 1)
+        {
+            finished[root->level] = 1;
+        }
+        printTree (outfp, root->children[i]);
+    }
 }
 
 void deleteTree(Node * root)
 {
 
+    int i = 0;
+    for (i = 0; i < root->num_children; i++)
+    {
+        deleteTree(root->children[i]);
+    }
+    free(root->children);
+    free(root);
 }
