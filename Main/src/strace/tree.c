@@ -5,40 +5,27 @@
 #include "tree.h"
 
 /* defined macros (Currently for printing in Mac OS X)*/
-#define INIT_CAPACITY 10
 #define T_FRAME "\342\224\234"
 #define H_BAR "\342\224\200"
 #define V_BAR "\342\224\202"
 #define BOTTOM "\342\224\224"
-
 /* Global Variables */
 int *finished = NULL; // a list keeping track of whether a node has finished printing all its children. 0 for finished and 1 for not
 int finishedCap = 0; // capacity of finished list
 int finishedNum = 0; // number of elements in the finished list
 
-/* main function for demo */
-int main (int argc, char * argv[])
-{
-    Node *root = (Node *)malloc(sizeof(Node));
-    root->data = "";
-    root->num_children = 0;
-    root->capacity = INIT_CAPACITY;
-    root->children = (Node**)malloc(sizeof(Node*) * INIT_CAPACITY);
-    root->level = 0;
-    finished = (int *) malloc(sizeof(int) * INIT_CAPACITY);
-    finishedCap = INIT_CAPACITY;
-    int i = 0;
-    for (i = 1; i < argc; i++)
-    {
-        insert(argv[i],root,0);
-    }
 
-    printTree(stdout, root);
-    deleteTree(root);
-    free(finished);
-    return 0;
+void init_var()
+{
+    finished = (int *) malloc(sizeof(int) * INIT_CAPACITY);
+    finishedCap = INIT_CAPACITY; 
 }
 
+void clear(Node *root)
+{
+    deleteTree(root);
+    free(finished);
+}
 
 void insert (char * filename, Node* root, int thisLevel)
 {

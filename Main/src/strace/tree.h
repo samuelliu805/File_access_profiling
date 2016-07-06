@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
+#define INIT_CAPACITY 10
 typedef struct treeNode 
 {
     char* data; //file or directory name
@@ -15,6 +16,8 @@ typedef struct treeNode
 } Node;
 
 
+void init_var();
+void clear(Node * root);
 /*
  * PUBLIC insert -- insert path into a tree
  *
@@ -28,12 +31,10 @@ void insert(char *filename, Node * root, int thisLevel);
 void printTree(FILE* outfp, Node * root);
 
 /*
- * PUBLIC deleteTree -- free memory of a tree
+ * PRIVATE deleteTree -- free memory of a tree
  *
  */
-void deleteTree(Node * root);
-
-
+static void deleteTree(Node * root);
 static void print (FILE *outfp, char * toPrint, int num);
 static void printPrefix (FILE * outfp, int index);
 static Node* search(char *filename, Node * curr);
