@@ -26,10 +26,11 @@ int finishedNum = 0; // number of elements in the finished list
 
 Node *init_var()
 {
-    finished = (int *) malloc(sizeof(int) * INIT_CAPACITY);
+    finished = (int *) calloc(sizeof(int) , INIT_CAPACITY);
     finishedCap = INIT_CAPACITY; 
     Node *root = (Node *)malloc(sizeof(Node));
-    root->data = "";
+    root->data = (char *)malloc(10);
+    root->data[0] = '\0';
     root->num_children = 0;
     root->capacity = INIT_CAPACITY;
     root->children = (Node**)malloc(sizeof(Node*) * INIT_CAPACITY);
@@ -52,6 +53,7 @@ void insertPath (char * filename, Node *root)
 static void insert (char * filename, Node* root, int thisLevel)
 {
     if (filename == NULL || !strcmp("", filename)) return ;
+    //printf ("%s\n",filename);
     char * next = filename;
     char * curr = filename;
     int flag = 0;
@@ -87,7 +89,8 @@ static void insert (char * filename, Node* root, int thisLevel)
 
         // initialization of a new node
         Node *newNode = (Node *)malloc(sizeof(Node));
-        newNode->data = filename; 
+        newNode->data = (char *)malloc(sizeof (filename));
+        strcpy (newNode->data, filename);
         newNode->capacity = INIT_CAPACITY;
         newNode->num_children = 0;
         newNode->level = thisLevel;
@@ -181,18 +184,19 @@ void printTree(FILE * outfp, Node* root)
         finished = (int *)realloc(finished, finishedCap);
     }
 
-    if (root -> level > 0)
+    if (root -> level >= 0)
     {
         finished[root->level] = 0;    
         finishedNum++;
         printPrefix (outfp, root->level); 
         print(outfp, root->data, 1);
+//        printf ("\n");
         print(outfp, "\n", 1);
     }
     int i = 0;
     for (i = 0; i < root->num_children; i++)
     {
-        if (i == root->num_children - 1)
+        if (i == root->num_children - 1 && root->level >= 0)
         {
             finished[root->level] = 1;
         }
@@ -209,5 +213,6 @@ static void deleteTree(Node * root)
         deleteTree(root->children[i]);
     }
     free(root->children);
+    free(root->data);
     free(root);
 }
