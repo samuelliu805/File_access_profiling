@@ -104,6 +104,13 @@ static void insert (char * filename, Node* root, int thisLevel)
     }
     else 
     {
+        if (next == NULL)
+        {
+            if (!strcmp(filename, child->data))
+            {
+                return;
+            }
+        }
         insert(next, child, ++thisLevel);
     }
     return; 

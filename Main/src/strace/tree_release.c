@@ -5,16 +5,11 @@ void usage();
 int main (int argc, char * argv[])
 {
     /*
-    Node * root = init_var();
-    int i = 0;
-    for (i = 1; i < argc; i++)
-    {
-        insertPath(argv[i],root);
-    }
+       Node * root = init_var();
 
-    printTree(stdout, root);
-    clear(root);
-    */
+       printTree(stdout, root);
+       clear(root);
+       */
 
     char read = 0;
     char * filename = NULL;
@@ -28,7 +23,8 @@ int main (int argc, char * argv[])
                       break;
             case 'l': lflag = 1;
                       break;
-            default : break;
+            default : usage();
+                      return -1;
         }
     }
 
@@ -37,7 +33,7 @@ int main (int argc, char * argv[])
         usage();
         return -1;
     }
-    
+
     Node * root = init_var();
     if (fflag)
     {
@@ -51,12 +47,16 @@ int main (int argc, char * argv[])
             //printf ("%s\n", buf);
             insertPath(buf, root); 
         }
-        
-        
     }
     else if (lflag)
     {
-    
+        int i = 0;
+        for (i = 2; i < argc; i++)
+        {
+            insertPath(argv[i],root);
+        }
+
+
     }
     else 
     {
@@ -64,6 +64,7 @@ int main (int argc, char * argv[])
         clear(root);
         return -1;
     }
+
     printTree(stdout, root);
     clear(root);
     return 0;
