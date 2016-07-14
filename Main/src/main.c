@@ -3,13 +3,15 @@
 #include <stdlib.h>
 
 #include "strace/strace.h"
+// #include "victims/victim.h"
 #include "main.h"
 
 int main() {
 	
 	int pathType = getPathType();
 	char *programName = readProgramName();
-	strace (programName, pathType);
+	operationList *opList = strace (programName, pathType);
+	printOPList_0(opList);
 	
 	free(programName);
 	

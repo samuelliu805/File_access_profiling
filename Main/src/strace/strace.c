@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../victims/victim.h"
+// #include "../victims/victim.h"
 
 #include "strace.h"
-#include "stracePrivate.h"
+// #include "stracePrivate.h"
 
 #define COMMAND_LENGTH 200
 
@@ -12,7 +12,7 @@ const int TESTING = 1;
 
 const int lineLength = 200;
 
-void strace (const char *programName, const int pathType) {
+operationList* strace (const char *programName, const int pathType) {
 	
 	char command[COMMAND_LENGTH] = "cd temp; strace -tt -T -o thread.txt ";
 	int i = -1, j = 0;
@@ -27,18 +27,58 @@ void strace (const char *programName, const int pathType) {
 	command[i] = '\n';
 	// system("cd temp; strace -tt -T -o thread.txt PROGRAM_PATH");
 	system(command);
-	parser("temp/thread.txt");
+	return parser("temp/thread.txt");
 }
 
 // private
 
-void parser (const char *threadFileName) {
+// file fileDescriptor mapper
+// doesn't avoid duplicates
+char* descriptorMapper (int d, mapList *mp) {
+	map *prev = mp->head, *current;
+	while (prev->next != NULL) {
+		current = prev->next;
+		if (d == current->d) return current->path;
+		prev = prev->next;
+	}
+	return NULL;
+}
+
+void addToMapList (int d, char *path, mapList *mp) {
+	map *m = malloc(sizeof(map));
+	m->d = d;
+	m->path = path;
+	m->next = mp->head->next;
+	mp->head->next = m;
+}
+
+void deleteFromMap (int d, mapList *mp) {
+	map *prev = mp->head, *current;
+	while (prev->next != NULL) {
+		current = prev->next;
+		if (d == current->d) {
+			prev->next = current->next;
+			free(current->path);
+			free(current);
+			return;
+		}
+		prev = prev->next;
+	}
+}
+
+// end file fileDescriptor mapper
+
+// parser
+
+operationList* parser (const char *threadFileName) {
+	
+	operationList *opList = createOPList();
 	
 	FILE *f = fopen(threadFileName, "r");
 	
 	char *line = malloc(sizeof(char) * lineLength);
 	
-	int pathLength = 200;
+	int pathLength = 100;
 	int startTimeLength = 15;
 	
 	char *startTime;
@@ -48,6 +88,10 @@ void parser (const char *threadFileName) {
 	unsigned long long int size;
 	double duration;
 	
+	mapList *mp = malloc(sizeof(mapList));
+	mp->head = malloc(sizeof(map));
+	mp->head->next = NULL;
+	
 	if (TESTING) {
 		type = -1;
 		type++;
@@ -56,7 +100,7 @@ void parser (const char *threadFileName) {
 	while (fgets(line, lineLength, f) != NULL) {
 		
 		startTime = (char*) calloc(startTimeLength, sizeof(char));
-		path = (char*) calloc(pathLength, sizeof(char));
+		size = -1;
 		
 		int i = 16;
 		
@@ -65,14 +109,11 @@ void parser (const char *threadFileName) {
 			*(line + i + 1) == 'p' &&
 			*(line + i + 2) == 'e' &&
 			*(line + i + 3) == 'n'
-		) {
+		) { // strcmp
 			type = 0;
+			path = (char*) calloc(pathLength, sizeof(char));
 			sscanf(line, "%[^ ] %*[^\"]\"%[^\"]\"%*[^=]= %d <%lf>", startTime, path, &fileDescriptor, &duration);
-			if (TESTING) {
-				printf("%s", line);
-				printf("open (%d)\n", fileDescriptor);
-				printf("\n");
-			}
+			addToMapList (fileDescriptor, path, mp);
 		} else if (
 			*(line + i + 0) == 'r' &&
 			*(line + i + 1) == 'e' &&
@@ -99,22 +140,35 @@ void parser (const char *threadFileName) {
 		) {
 			type = 3;
 			sscanf(line, "%[^ ] %*[^(](%d)%*[^<]<%lf>", startTime, &fileDescriptor, &duration);
-			if (TESTING) {
-				printf("%s", line);
-				printf("close (%d)\n", fileDescriptor);
-				printf("\n");
-			}
 		} else {
 			type = 4;
 		}
 		
-		// ...
+		if (type != 0) {
+			path = descriptorMapper(fileDescriptor, mp);
+			if (path == NULL) path = "NULL";
+		}
 		
-		// free(startTime);
-		// free(path);
+		if (type != 4) {
+			addOP (path, type, startTime, duration, size, opList);
+		}
+		
+		if (type == 3) deleteFromMap(fileDescriptor, mp);
+		
+		free(startTime);
+		// free(path); // free from deleteFromMap()
+		
 		for (int i = 0; i < lineLength; i++) *(line + i) = 0;
+		
 	} // end while
 	
 	free(line);
 	
+	free(mp->head);
+	free(mp);
+	
+	return opList;
+	
 }
+
+// end parser
