@@ -27,6 +27,8 @@ void deleteOPList ();
 void pushOP (operation *op, operationList *opList);
 
 
+unsigned long long int totalSize (operationList *opList, char *path, int type);
+
 /*
 
 typedef struct operation { // linked list

@@ -78,6 +78,20 @@ void pushOP (operation *op, operationList *opList) {
 
 
 
+unsigned long long int totalSize (operationList *opList, char *path, int type) {
+	unsigned long long int output = 0;
+	for (int i = 0; i < opList->size; i++) {
+		if ( strcmp(opList->list[i]->path, path) == 0 ) {
+			if (opList->list[i]->type == type) {
+				output += opList->list[i]->size;
+			}
+		}
+	}
+	return output;
+}
+
+
+
 /*
 priorityQ* createQ () {
 	priorityQ *q = malloc(sizeof(priorityQ));
