@@ -15,10 +15,16 @@ OBJ_DIR = .objs
 
 all: dirs mytree test
 
-dirs:
-	mkdir -p $(BIN_DIR)
-	mkdir -p $(TEMP_DIR)
-	mkdir -p $(OBJ_DIR)
+dirs: $(BIN_DIR) $(OBJ_DIR) $(TEMP_DIR)
+	
+$(BIN_DIR) : 
+	@mkdir -p $(BIN_DIR)
+
+$(TEMP_DIR) : 
+	@mkdir -p $(TEMP_DIR)
+
+$(OBJ_DIR) : 
+	@mkdir -p $(OBJ_DIR)
 
 
 $(OBJ_DIR)/mytree.o : $(TREE_DIR)/tree.c $(TREE_DIR)/tree.h

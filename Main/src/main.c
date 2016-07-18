@@ -1,4 +1,4 @@
-//#define _GNU_SOURCE // enables getline
+#define _GNU_SOURCE // enables getline
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,8 +16,15 @@ int main() {
 	
 	free(programName); */
 	
-	operationList *opList = parser("temp/thread.txt");
-	
+    if (fopen("thread.txt", "r") == NULL) 
+    {
+        fprintf(stderr, "No 'thread.txt' exists in current directory!\n");
+        return -1; 
+    }
+    //system ("pwd");
+	operationList *opList = parser("thread.txt");
+    printf ("%d %d\n", opList->size, opList->length);
+    printOPList_0 (opList);
 	return 0;
 	
 }
