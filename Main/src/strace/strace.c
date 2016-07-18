@@ -1,3 +1,11 @@
+/*
+
+please run the fellowing command and place thread.txt under the temp folder
+
+strace -tt -T -o thread.txt PROGRAM_PATH
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,6 +20,7 @@ const int TESTING = 1;
 
 const int lineLength = 200;
 
+/* no longer necessary
 operationList* strace (const char *programName, const int pathType) {
 	
 	char command[COMMAND_LENGTH] = "cd temp; strace -tt -T -o thread.txt ";
@@ -28,7 +37,7 @@ operationList* strace (const char *programName, const int pathType) {
 	// system("cd temp; strace -tt -T -o thread.txt PROGRAM_PATH");
 	system(command);
 	return parser("temp/thread.txt");
-}
+} */
 
 // private
 

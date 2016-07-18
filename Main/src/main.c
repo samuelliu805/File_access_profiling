@@ -8,16 +8,22 @@
 
 int main() {
 	
+	/* no longer necessary
 	int pathType = getPathType();
 	char *programName = readProgramName();
 	operationList *opList = strace (programName, pathType);
 	printOPList_0(opList);
 	
-	free(programName);
+	free(programName); */
+	
+	operationList *opList = parser("temp/thread.txt");
 	
 	return 0;
 	
 }
+
+
+/* no longer necessary
 
 int getPathType () {
 	int type = -1;
@@ -60,4 +66,4 @@ char* readProgramName() {
 	
 	return programName;
 	
-}
+} */
