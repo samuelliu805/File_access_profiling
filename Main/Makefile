@@ -1,6 +1,6 @@
 # Compiler
 CC = gcc
-CFLAGS = -g -Wall -std=c99
+CFLAGS = -g -Wall 
 
 # Directories
 SRC_DIR = src
@@ -15,14 +15,8 @@ OBJ_DIR = .objs
 
 all: dirs mytree test
 
-dirs: $(BIN_DIR) $(OBJ_DIR) $(TEMP_DIR)
+dirs: $(OBJ_DIR) 
 	
-$(BIN_DIR) : 
-	@mkdir -p $(BIN_DIR)
-
-$(TEMP_DIR) : 
-	@mkdir -p $(TEMP_DIR)
-
 $(OBJ_DIR) : 
 	@mkdir -p $(OBJ_DIR)
 
@@ -53,7 +47,4 @@ test : $(OBJ_DIR)/main.o $(OBJ_DIR)/strace.o $(OBJ_DIR)/victim.o
 #	$(BIN_DIR)/./test
 
 clean:
-	rm -rf $(BIN_DIR)
-	rm -rf $(TEMP_DIR)
-	rm -rf $(OBJ_DIR)
-	rm -rf mytree test 
+	rm -rf mytree test $(OBJ_DIR)
