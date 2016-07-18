@@ -5,7 +5,7 @@ CFLAGS = -g -Wall -std=c99
 # Directories
 # SRC_DIR = src
 BIN_DIR = bin
-TEMP_DIR = temp
+# TEMP_DIR = temp
 
 SRC = $(shell find . -name *.c)
 
@@ -15,11 +15,11 @@ all: clean dirs
 
 dirs:
 	mkdir -p $(BIN_DIR)
-	mkdir -p $(TEMP_DIR)
+	# mkdir -p $(TEMP_DIR)
 
 test:
 	$(BIN_DIR)/./test
 
 clean:
 	rm -rf $(BIN_DIR)
-	rm -rf $(TEMP_DIR)
+	# rm -rf $(TEMP_DIR)
