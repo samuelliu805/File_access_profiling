@@ -1,5 +1,11 @@
 #include "../victims/victim.h"
 
+#define OPEN 0
+#define READ 1
+#define WRITE 2
+#define CLOSE 3
+
+
 operationList* strace (const char *programName, const int pathType);
 
 // private
