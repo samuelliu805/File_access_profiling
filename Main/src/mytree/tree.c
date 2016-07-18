@@ -52,7 +52,7 @@ void insertPath (char * filename, Node *root)
 
 static void insert (char * filename, Node* root, int thisLevel)
 {
-    if (filename == NULL || !strcmp("", filename)) return ;
+    if (filename == NULL || !strcmp("", filename) || !strcmp("NULL",filename) || !strcmp(".",filename) ) return ;
     //printf ("%s\n",filename);
     char * next = filename;
     char * curr = filename;
@@ -196,8 +196,15 @@ void printTree(FILE * outfp, Node* root)
         finished[root->level] = 0;    
         finishedNum++;
         printPrefix (outfp, root->level); 
-        print(outfp, root->data, 1);
-//        printf ("\n");
+        if (strcmp(root->data, ""))
+        {
+            print(outfp, root->data, 1);
+        }
+        else 
+        {
+            print(outfp, "/", 1);
+        }
+//      printf ("\n");
         print(outfp, "\n", 1);
     }
     int i = 0;

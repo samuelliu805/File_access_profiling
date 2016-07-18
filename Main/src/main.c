@@ -23,7 +23,7 @@ int main() {
     }
     //system ("pwd");
 	operationList *opList = parser("thread.txt");
-    printf ("%d %d\n", opList->size, opList->length);
+    //printf ("%d %d\n", opList->size, opList->length);
     printOPList_0 (opList);
 	return 0;
 	

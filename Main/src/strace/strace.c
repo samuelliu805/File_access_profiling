@@ -105,9 +105,9 @@ operationList* parser (const char *threadFileName) {
 		type = -1;
 		type++;
 	}
-	
+	int i = 0;
 	while (fgets(line, lineLength, f) != NULL) {
-		
+	
 		startTime = (char*) calloc(startTimeLength, sizeof(char));
 		size = -1;
 		
@@ -152,7 +152,6 @@ operationList* parser (const char *threadFileName) {
 		} else {
 			type = 4;
 		}
-		
 		if (type != 0) {
 			path = descriptorMapper(fileDescriptor, mp);
 			if (path == NULL) path = "NULL";

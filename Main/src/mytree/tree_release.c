@@ -1,19 +1,13 @@
 #include "tree.h"
+#include "../strace/strace.h" 
 
 void usage();
 
 int main (int argc, char * argv[])
 {
-    /*
-       Node * root = init_var();
-
-       printTree(stdout, root);
-       clear(root);
-       */
-
     char read = 0;
     char * filename = NULL;
-    int fflag = 0, lflag = 0;
+    int fflag = 0, lflag = 0, i = 0;
     while ((read = getopt(argc, argv, "f:l:")) != -1)
     {
         switch (read)
@@ -23,18 +17,18 @@ int main (int argc, char * argv[])
                       break;
             case 'l': lflag = 1;
                       break;
-            default : usage();
-                      return -1;
+            default : break;
+                    
         }
     }
 
+    Node * root = init_var();
     if (fflag && lflag)
     {
         usage();
         return -1;
     }
 
-    Node * root = init_var();
     if (fflag)
     {
         FILE * fp = fopen(filename, "r");
@@ -50,21 +44,29 @@ int main (int argc, char * argv[])
     }
     else if (lflag)
     {
-        int i = 0;
+//        int i = 0;
         for (i = 2; i < argc; i++)
         {
             insertPath(argv[i],root);
         }
 
 
-    }
+    }    
     else 
     {
-        usage();
-        clear(root);
-        return -1;
-    }
+        if (fopen("thread.txt", "r") == NULL) 
+        {
+            fprintf(stderr, "No 'thread.txt' exists in current directory!\n");
+            return -1; 
+        }
+	    operationList *opList = parser("thread.txt"); 
+        for (i = 0; i < opList->size; i++)
+        {
+            insertPath(opList->list[i]->path, root);
+        }
 
+    }
+    
     printTree(stdout, root);
     clear(root);
     return 0;
