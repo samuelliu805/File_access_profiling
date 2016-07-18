@@ -1,4 +1,4 @@
-#define _GNU_SOURCE // enables getline
+//#define _GNU_SOURCE // enables getline
 #include <stdio.h>
 #include <stdlib.h>
 
