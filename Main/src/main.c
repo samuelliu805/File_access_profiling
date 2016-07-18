@@ -74,3 +74,4 @@ char* readProgramName() {
 	return programName;
 	
 } */
+

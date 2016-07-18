@@ -180,3 +180,7 @@ operationList* parser (const char *threadFileName) {
 }
 
 // end parser
+
+unsigned long long int getNumOfBytes (operationList *opList, char *path, int type) {
+	return totalSize (opList, path, type);
+}
