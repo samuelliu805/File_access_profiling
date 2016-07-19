@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include "victim.h"
 
 void cpyStr (char *a, int aL, char *b, int bL) { // copy b to a

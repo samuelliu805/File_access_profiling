@@ -105,7 +105,6 @@ operationList* parser (const char *threadFileName) {
 		type = -1;
 		type++;
 	}
-	int i = 0;
 	while (fgets(line, lineLength, f) != NULL) {
 	
 		startTime = (char*) calloc(startTimeLength, sizeof(char));
