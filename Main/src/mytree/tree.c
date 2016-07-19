@@ -52,7 +52,7 @@ void insertPath (char * filename, Node *root)
 
 static void insert (char * filename, Node* root, int thisLevel)
 {
-    if (filename == NULL || !strcmp("", filename) || !strcmp("NULL",filename) || !strcmp(".",filename) ) return ;
+    if (filename == NULL || !strncmp(" ", filename, 1) || !strncmp("NULL",filename, 4) || !strncmp(".",filename, 1) ) return ;
     //printf ("%s\n",filename);
     char * next = filename;
     char * curr = filename;
@@ -89,7 +89,7 @@ static void insert (char * filename, Node* root, int thisLevel)
 
         // initialization of a new node
         Node *newNode = (Node *)malloc(sizeof(Node));
-        newNode->data = (char *)malloc(sizeof (filename));
+        newNode->data = (char *)malloc(strlen(filename) + 1);
         strcpy (newNode->data, filename);
         newNode->capacity = INIT_CAPACITY;
         newNode->num_children = 0;

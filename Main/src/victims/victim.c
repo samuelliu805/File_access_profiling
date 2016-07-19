@@ -45,11 +45,12 @@ void printOPList_0 (operationList *opList) { // for testing purposes
 void addOP (char *path, int type, char *startTime, double duration, unsigned long long int size, operationList *opList) {
     //printf("add op\n");
 	operation *op = malloc(sizeof(operation));
-	cpyStr(op->path, PATH_LENGTH, path, PATH_LENGTH);
+    //op->path = (char *)malloc (PATH_LENGTH);
+	strncpy(op->path, path, PATH_LENGTH);
 	
     op->type = type;
 	op->startTime = calloc(StartTime_LENGTH, sizeof(char));
-	cpyStr(op->startTime, StartTime_LENGTH, startTime, StartTime_LENGTH);
+	strncpy(op->startTime, startTime, StartTime_LENGTH);
 	op->duration = duration;
 	op->size = size;
 	pushOP(op, opList);

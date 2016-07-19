@@ -44,13 +44,10 @@ int main (int argc, char * argv[])
     }
     else if (lflag)
     {
-//        int i = 0;
         for (i = 2; i < argc; i++)
         {
             insertPath(argv[i],root);
         }
-
-
     }    
     else 
     {
@@ -60,9 +57,15 @@ int main (int argc, char * argv[])
             return -1; 
         }
 	    operationList *opList = parser("thread.txt"); 
+        char bytes[1000];
+        char path[1000]; 
         for (i = 0; i < opList->size; i++)
         {
-            insertPath(opList->list[i]->path, root);
+            sprintf(bytes, " (total read: %d bytes; total write: %d bytes)", (int)getNumOfBytes(opList, opList->list[i]->path, READ), 
+                                                              (int)getNumOfBytes(opList, opList->list[i]->path, WRITE));
+            strcpy(path, opList->list[i]->path);
+            strcat(path, bytes);
+            insertPath(path, root);
         }
 
     }
