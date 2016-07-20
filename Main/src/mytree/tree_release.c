@@ -72,6 +72,7 @@ int main (int argc, char * argv[])
     
     printTree(stdout, root);
     clear(root);
+//    deleteOpList_0(opList);
     return 0;
 }
 

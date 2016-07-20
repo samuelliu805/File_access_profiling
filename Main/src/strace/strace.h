@@ -5,7 +5,6 @@
 #define WRITE 2
 #define CLOSE 3
 
-
 operationList* strace (const char *programName, const int pathType);
 
 // private
@@ -27,3 +26,4 @@ void deleteFromMap (int d, mapList *mp);
 operationList* parser (const char *threadFileName);
 
 unsigned long long int getNumOfBytes (operationList *opList, char *path, int type);
+void deleteOPList_0 (operationList *opList);

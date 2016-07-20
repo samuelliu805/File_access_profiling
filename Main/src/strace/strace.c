@@ -1,6 +1,6 @@
 /*
 
-please run the fellowing command and place thread.txt under the temp folder
+please run the fellowing command and place thread.txt under the Main folder
 
 strace -tt -T -o thread.txt PROGRAM_PATH
 
@@ -8,6 +8,7 @@ strace -tt -T -o thread.txt PROGRAM_PATH
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // #include "../victims/victim.h"
 
@@ -107,45 +108,23 @@ operationList* parser (const char *threadFileName) {
 	}
 	while (fgets(line, lineLength, f) != NULL) {
 	
-		startTime = (char*) calloc(startTimeLength, sizeof(char));
+		startTime = (char*) calloc(startTimeLength + 1, sizeof(char));
 		size = -1;
 		
 		int i = 16;
 		
-		if (
-			*(line + i + 0) == 'o' &&
-			*(line + i + 1) == 'p' &&
-			*(line + i + 2) == 'e' &&
-			*(line + i + 3) == 'n'
-		) { // strcmp
+		if (strncmp((line + i), "open", 4) == 0) {
 			type = 0;
 			path = (char*) calloc(pathLength, sizeof(char));
 			sscanf(line, "%[^ ] %*[^\"]\"%[^\"]\"%*[^=]= %d <%lf>", startTime, path, &fileDescriptor, &duration);
 			addToMapList (fileDescriptor, path, mp);
-		} else if (
-			*(line + i + 0) == 'r' &&
-			*(line + i + 1) == 'e' &&
-			*(line + i + 2) == 'a' &&
-			*(line + i + 3) == 'd'
-		) {
+		} else if (strncmp((line + i), "read", 4) == 0) {
 			type = 1;
 			sscanf(line, "%[^ ] %*[^(](%d,%*[^=]= %lld <%lf>", startTime, &fileDescriptor, &size, &duration);
-		} else if (
-			*(line + i + 0) == 'w' &&
-			*(line + i + 1) == 'r' &&
-			*(line + i + 2) == 'i' &&
-			*(line + i + 3) == 't' &&
-			*(line + i + 4) == 'e'
-		) {
+		} else if (strncmp((line + i), "write", 5) == 0) {
 			type = 2;
 			sscanf(line, "%[^ ] %*[^(](%d,%*[^=]= %lld <%lf>", startTime, &fileDescriptor, &size, &duration);
-		} else if (
-			*(line + i + 0) == 'c' &&
-			*(line + i + 1) == 'l' &&
-			*(line + i + 2) == 'o' &&
-			*(line + i + 3) == 's' &&
-			*(line + i + 4) == 'e'
-		) {
+		} else if (strncmp((line + i), "close", 5) == 0) {
 			type = 3;
 			sscanf(line, "%[^ ] %*[^(](%d)%*[^<]<%lf>", startTime, &fileDescriptor, &duration);
 		} else {
@@ -173,7 +152,7 @@ operationList* parser (const char *threadFileName) {
 	
 	free(mp->head);
 	free(mp);
-	
+	fclose(f);
 	return opList;
 	
 }
@@ -182,4 +161,8 @@ operationList* parser (const char *threadFileName) {
 
 unsigned long long int getNumOfBytes (operationList *opList, char *path, int type) {
 	return totalSize (opList, path, type);
+}
+
+void deleteOPList_0 (operationList *opList) {
+	deleteOPList(opList);
 }
