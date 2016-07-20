@@ -51,7 +51,8 @@ int main (int argc, char * argv[])
     }    
     else 
     {
-        if (fopen("thread.txt", "r") == NULL) 
+        FILE * thread_fp = NULL;
+        if ((thread_fp = fopen("thread.txt", "r")) == NULL) 
         {
             fprintf(stderr, "No 'thread.txt' exists in current directory!\n");
             return -1; 
@@ -69,6 +70,7 @@ int main (int argc, char * argv[])
         }
 
         deleteOPList_0(opList);
+        fclose(thread_fp);
     }
     
     printTree(stdout, root);
