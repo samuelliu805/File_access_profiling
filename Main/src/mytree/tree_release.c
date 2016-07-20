@@ -56,7 +56,7 @@ int main (int argc, char * argv[])
             fprintf(stderr, "No 'thread.txt' exists in current directory!\n");
             return -1; 
         }
-	    operationList *opList = parser("thread.txt"); 
+        operationList *opList = parser("thread.txt"); 
         char bytes[1000];
         char path[1000]; 
         for (i = 0; i < opList->size; i++)
@@ -68,11 +68,11 @@ int main (int argc, char * argv[])
             insertPath(path, root);
         }
 
+        deleteOPList_0(opList);
     }
     
     printTree(stdout, root);
     clear(root);
-//    deleteOpList_0(opList);
     return 0;
 }
 
