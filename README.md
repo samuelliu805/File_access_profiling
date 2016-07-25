@@ -1,11 +1,12 @@
 # File Access Profiling Project
 Author: Shu Liu, Jiahao Qian, David Chen
-## How to use `mytree`
--   This project makes use of `strace`, a diagnostic utility for Linux (See http://linux.die.net/man/1/strace or `man 1 strace` in a Linux system for more information). The user should run `strace -tt -T -o thread.txt [program]`, which generates a file called `thread.txt` with all information. Use of wrong flags in `strace` would cause our parser not working.
--   Please include `thread.txt` in the "Main" directory.  Then run `make`.
--   If you want the file tree with all files and I/O information, just run `./mytree`
--   If you have a list of file paths stored in a separate text, and you want them to be shown in the tree, please run `./mytree -f [path_filename]`
--   If you want to add some file paths manually as arguments, please run `./mytree -l [path1] [path2] [...]`. Note that in this case, please do not add other flags, and that will cause the program to crash. 
+## How to use `filetree`
+-   This project makes use of `strace`, a diagnostic utility for Linux (See http://linux.die.net/man/1/strace or `man 1 strace` in a Linux system for more information). The user should run `strace -tt -T -o thread.txt [program]`, which generates a file called `thread.txt` with all information. Use of wrong flags in `strace` will cause our parser not working. Please note that `thread.txt` is only an example, you can use whatever filename you want!
+-   Please include `thread.txt` in the "Main" directory.  Then run `make`, which will generate an executable called `filetree`. We run it with different flags.
+-   If you want the file tree with all files and I/O information from strace, run with `-t [parse_filename]`, where the `parse_filename` is the output text from `strace` (what we referred as "thread.txt").
+-   If you have a list of file paths stored in a separate text, and you want them to be shown in the tree, please run with `-f [path_filename]`
+-   If you want to add some file paths manually as arguments, please run with `-l [path1] [path2] [...]`.
+-   If you want to export the output to a file, please run with `-o [output_filename]`. If the file exists in the "Main" directory, then the filetree will be appended to the bottom, otherwise we will create a newfile with the filetree.
 
 ## Log
 ### Update July 20, 2016
