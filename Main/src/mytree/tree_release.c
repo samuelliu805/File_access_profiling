@@ -3,19 +3,11 @@
 #include "../strace/strace.h" 
 
 void usage();
-void usage_filename();
 
 void usage()
 {
-    fprintf(stderr, "\n\n\tUsage: ./filetree [-t parsefile_name] [-f path_filename] [-l filepath1 filepath2 ...]\n\n\n");
+    fprintf(stderr, "\n\n\tUsage: ./filetree [-t parsefile_name] [-o output_filename] [-f path_filename] [-l filepath1 filepath2 ...]\n\n\n");
 }
-
-void usage_filename()
-{
-    fprintf(stderr, "You have to include a filename for parsing!\n");
-    usage();
-}
-
 
 
 int main (int argc, char * argv[])
