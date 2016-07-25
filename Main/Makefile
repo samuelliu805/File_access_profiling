@@ -13,7 +13,7 @@ OBJ_DIR = .objs
 
 #SRC = $(shell find . -name *.c)
 
-all: dirs mytree test
+all: dirs filetree test
 
 dirs: $(OBJ_DIR) 
 	
@@ -21,10 +21,10 @@ $(OBJ_DIR) :
 	@mkdir -p $(OBJ_DIR)
 
 
-$(OBJ_DIR)/mytree.o : $(TREE_DIR)/tree.c $(TREE_DIR)/tree.h
+$(OBJ_DIR)/filetree.o : $(TREE_DIR)/tree.c $(TREE_DIR)/tree.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-$(OBJ_DIR)/mytree_release.o : $(TREE_DIR)/tree_release.c $(TREE_DIR)/tree.h $(STRACE_DIR)/strace.h
+$(OBJ_DIR)/filetree_release.o : $(TREE_DIR)/tree_release.c $(TREE_DIR)/tree.h $(STRACE_DIR)/strace.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 $(OBJ_DIR)/strace.o : $(STRACE_DIR)/strace.c $(STRACE_DIR)/strace.h $(VICTIMS_DIR)/victim.h
@@ -36,7 +36,7 @@ $(OBJ_DIR)/victim.o : $(VICTIMS_DIR)/victim.c $(VICTIMS_DIR)/victim.h
 $(OBJ_DIR)/main.o : $(SRC_DIR)/main.c $(SRC_DIR)/main.h $(STRACE_DIR)/strace.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-mytree : $(OBJ_DIR)/mytree.o $(OBJ_DIR)/mytree_release.o $(OBJ_DIR)/strace.o $(OBJ_DIR)/victim.o
+filetree : $(OBJ_DIR)/filetree.o $(OBJ_DIR)/filetree_release.o $(OBJ_DIR)/strace.o $(OBJ_DIR)/victim.o
 	$(CC) $^ -o $@
 
 test : $(OBJ_DIR)/main.o $(OBJ_DIR)/strace.o $(OBJ_DIR)/victim.o
@@ -47,4 +47,4 @@ test : $(OBJ_DIR)/main.o $(OBJ_DIR)/strace.o $(OBJ_DIR)/victim.o
 #	$(BIN_DIR)/./test
 
 clean:
-	rm -rf mytree test $(OBJ_DIR)
+	rm -rf filetree test $(OBJ_DIR)
