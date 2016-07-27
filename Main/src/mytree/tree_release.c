@@ -3,6 +3,7 @@
 #include "../strace/strace.h" 
 
 void usage();
+int search_memo(char **memo, char * str, int size);
 
 void usage()
 {
@@ -60,30 +61,46 @@ int main (int argc, char * argv[])
                               return -1; 
                           }
                           operationList *opList = parser(optarg); 
-                          char bytes[1000];
+                          //                          char bytes[1000];
                           char path[1000]; 
+                          char ** memoPath = (char **)malloc(100* sizeof(char *));
+                          int memo_size = 0;
                           for (i = 0; i < opList->size; i++)
                           {
-                              sprintf(bytes, " (total read: %d bytes; total write: %d bytes)", 
-                                      (int)getNumOfBytes(opList, opList->list[i]->path, READ), 
-                                      (int)getNumOfBytes(opList, opList->list[i]->path, WRITE));
-                              strcpy(path, opList->list[i]->path);
-                              strcat(path, bytes);
-                              insertPath(path, root);
+
+                              if (strcmp("NULL", opList->list[i]->path) && !search_memo(memoPath, opList->list[i]->path, memo_size))
+                              {
+                                  sprintf(path, "%s (total read: %d bytes; total write: %d bytes)", 
+                                  opList->list[i]->path,
+                                  (int)getNumOfBytes(opList, opList->list[i]->path, READ), 
+                                  (int)getNumOfBytes(opList, opList->list[i]->path, WRITE)); 
+                                    
+                                  //strcpy(path, opList->list[i]->path);
+                                  //strcat(path, bytes);
+
+
+                                  //strcat (opList->list[i]->path, bytes);
+                                  insertPath(path, root);
+                                  memoPath[memo_size++] = strdup(opList->list[i]->path);
+                              }
                           }
 
                           deleteOPList_0(opList);
                           fclose(thread_fp);
-
+                          for (i = 0; i < memo_size; i++)
+                          {
+                              free(memoPath[i]);
+                          }
+                          free(memoPath);
                           break;
                       }
-                      
+
             case 'o': {
                           outfp = fopen(optarg,"w");
                           break;
                       }
             default : ;
-                      
+
 
 
         }
@@ -104,4 +121,15 @@ int main (int argc, char * argv[])
     return 0;
 }
 
-
+int search_memo(char **memo, char * str, int size)
+{
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        if (!strcmp (memo[i], str))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}

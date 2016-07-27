@@ -196,7 +196,7 @@ void printTree(FILE * outfp, Node* root)
         finished[root->level] = 0;    
         finishedNum++;
         printPrefix (outfp, root->level); 
-        if (strcmp(root->data, ""))
+        if (strcmp(root->data, "") || root->level != 0 )
         {
             print(outfp, root->data, 1);
         }
