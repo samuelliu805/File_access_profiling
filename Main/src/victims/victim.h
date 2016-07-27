@@ -21,11 +21,13 @@ void cpyStr (char *a, int aL, char *b, int bL);
 int compareStr (char* a, int l1, char* b, int l2);
 void printOPList (char *format, operationList *opList, char *fileName);
 
+int compareFunc (const void *s1, const void *s2);
 int comparePath (const void *s1, const void *s2);
 int compareType (const void *s1, const void *s2);
 int compareStartTime (const void *s1, const void *s2);
 int compareDuration (const void *s1, const void *s2);
 int compareSize (const void *s1, const void *s2);
+int compareEqual (const void *s1, const void *s2);
 
 void addOP (char *path, int type, char *startTime, double duration, unsigned long long int size, operationList *opList);
 operationList* createOPList ();
@@ -36,4 +38,6 @@ void pushOP (operation *op, operationList *opList);
 unsigned long long int totalSize (operationList *opList, char *path, int type);
 
 
-void testSort (operationList *opList);
+// int (*pickCompareFunc())(const *void, const *void);
+int (*pickCompareFunc())(const void *s1, const void *s2);
+void testSort (operationList *opList, int *priority, int priorityLen);

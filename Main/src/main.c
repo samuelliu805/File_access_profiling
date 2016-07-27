@@ -16,8 +16,10 @@ int main() {
 	
 	operationList *opList = parser("thread.txt");
     
-	// printOPList_0 (opList);
-	testSort(opList);
+	int priority[] = {2, 4, 5};
+	// int priority[] = {2};
+	testSort (opList, priority, 3);
+	// testSort (opList, priority, 1);
 	
 	printOPList("[type]\t[startTime]\t[duration]\t[size]\t[path]", opList, "output.txt");
 	

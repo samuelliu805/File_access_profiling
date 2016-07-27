@@ -6,13 +6,7 @@
 int comparePath (const void *s1, const void *s2) {
 	operation *op1 = *((operation **) s1);
 	operation *op2 = *((operation **) s2);
-	int output = compareStr(op1->path, PATH_LENGTH, op2->path, PATH_LENGTH);
-	if (output != 0) {
-		return output;
-	} else {
-		return compareStartTime(s1, s2);
-	}
-	
+	return compareStr(op1->path, PATH_LENGTH, op2->path, PATH_LENGTH);
 }
 
 int compareType (const void *s1, const void *s2) {
@@ -45,6 +39,10 @@ int compareSize (const void *s1, const void *s2) {
 	} else {
 		return (op1->size > op2->size) ? 1 : -1;
 	}
+}
+
+int compareEqual (const void *s1, const void *s2) {
+	return 1;
 }
 
 void cpyStr (char *a, int aL, char *b, int bL) { // copy b to a
@@ -185,14 +183,47 @@ unsigned long long int totalSize (operationList *opList, char *path, int type) {
 }
 
 
+/* sort */
 
-/* (*sortArgs())(const *void, const *void) {
-	
-} */
+int *s_priority;
+/*
+1: comparePath
+2: compareType
+3: compareStartTime
+4: compareDuration
+5: compareSize
+*/
 
-void testSort (operationList *opList) {
-	// printOPList("aaa [type]\t[startTime]\t[duration]\t[size]\t[path]", opList);
-	// printf("\n\n");
-	qsort(opList->list, opList->size, sizeof(operation*), comparePath);
+int s_ithPriority, s_priorityLen;
+
+
+int compareFunc (const void *s1, const void *s2) {
+	int output = (*pickCompareFunc())(s1, s2);
+	if (output == 0) {
+		return compareFunc(s1, s2);
+	} else {
+		s_ithPriority = 0;
+		return output;
+	}
+}
+
+int (*pickCompareFunc())(const void *s1, const void *s2) {
+	if (s_ithPriority >= s_priorityLen) return compareEqual;
+	switch (*(s_priority + s_ithPriority++)) {
+		case 1: return comparePath;
+		case 2: return compareType;
+		case 3: return compareStartTime;
+		case 4: return compareDuration;
+		case 5: return compareSize;
+	}
+	return compareEqual;
+}
+
+void testSort (operationList *opList, int *priority, int priorityLen) {
+	s_priority = priority;
+	s_ithPriority = 0;
+	s_priorityLen = priorityLen;
+	qsort(opList->list, opList->size, sizeof(operation*), compareFunc);
+	// qsort(opList->list, opList->size, sizeof(operation*), compareType);
 	// printOPList("[startTime]\t[type]\t[duration]\t[size]\t[path]", opList);
 }
