@@ -194,5 +194,5 @@ void testSort (operationList *opList) {
 	// printOPList("aaa [type]\t[startTime]\t[duration]\t[size]\t[path]", opList);
 	// printf("\n\n");
 	qsort(opList->list, opList->size, sizeof(operation*), comparePath);
-	printOPList("[startTime]\t[type]\t[duration]\t[size]\t[path]", opList);
+	// printOPList("[startTime]\t[type]\t[duration]\t[size]\t[path]", opList);
 }
