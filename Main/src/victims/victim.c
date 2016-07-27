@@ -69,7 +69,10 @@ int compareStr (char* a, int l1, char* b, int l2) {
 
 // input:	[type]\t[startTime]\t[duration]\t[size]\t[path]
 // output:	open	14:48:55.120775	0.000051	-1	/etc/ld.so.cache
-void printOPList (char *format, operationList *opList) {
+void printOPList (char *format, operationList *opList, char *fileName) {
+	
+	FILE *f = fopen(fileName, "w");
+	
 	char *flagList[] = {
 		"path",
 		"type",
@@ -85,16 +88,16 @@ void printOPList (char *format, operationList *opList) {
 		int j = -1;
 		while (format[++j] != 0) {
 			if (strncmp((format + j), "\[", 2) == 0) {
-				printf("[");
+				fprintf(f, "[");
 				j++;
 				// continue;
 			} else if (format[j] == '[') {
 				for (int k = 0; k < numOfFlag; k++) {
-					// printf("%s\t%d\n\n", flagList[k], strlen(flagList[k]));
+					// fprintf(f, "%s\t%d\n\n", flagList[k], strlen(flagList[k]));
 					if (strncmp((format + j + 1), flagList[k], strlen(flagList[k])) == 0) {
 						switch (k) {
 							case 0:
-								printf("%s", op->path);
+								fprintf(f, "%s", op->path);
 								break;
 							case 1:
 								switch (op->type) {
@@ -103,16 +106,16 @@ void printOPList (char *format, operationList *opList) {
 									case 2: typeC = "write"; break;
 									case 3: typeC = "close"; break;
 								}
-								printf("%s", typeC);
+								fprintf(f, "%s", typeC);
 								break;
 							case 2:
-								printf("%s", op->startTime);
+								fprintf(f, "%s", op->startTime);
 								break;
 							case 3:
-								printf("%f", op->duration);
+								fprintf(f, "%f", op->duration);
 								break;
 							case 4:
-								printf("%lld", op->size);
+								fprintf(f, "%lld", op->size);
 								break;
 						}
 						j += strlen(flagList[k]) + 1;
@@ -120,11 +123,14 @@ void printOPList (char *format, operationList *opList) {
 					}
 				}
 			} else {
-				printf("%c", format[j]);
+				fprintf(f, "%c", format[j]);
 			} // end if;
 		} // end while
-		printf("\n");
+		fprintf(f, "\n");
 	} // end for
+	
+	fclose(f);
+	
 }
 
 void addOP (char *path, int type, char *startTime, double duration, unsigned long long int size, operationList *opList) {
@@ -179,6 +185,10 @@ unsigned long long int totalSize (operationList *opList, char *path, int type) {
 }
 
 
+
+/* (*sortArgs())(const *void, const *void) {
+	
+} */
 
 void testSort (operationList *opList) {
 	// printOPList("aaa [type]\t[startTime]\t[duration]\t[size]\t[path]", opList);

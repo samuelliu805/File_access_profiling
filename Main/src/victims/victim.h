@@ -19,7 +19,7 @@ typedef struct operationList { // array
 
 void cpyStr (char *a, int aL, char *b, int bL);
 int compareStr (char* a, int l1, char* b, int l2);
-void printOPList (char *format, operationList *opList);
+void printOPList (char *format, operationList *opList, char *fileName);
 
 int comparePath (const void *s1, const void *s2);
 int compareType (const void *s1, const void *s2);

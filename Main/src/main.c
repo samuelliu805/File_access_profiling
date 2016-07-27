@@ -19,6 +19,8 @@ int main() {
 	// printOPList_0 (opList);
 	testSort(opList);
 	
+	printOPList("[type]\t[startTime]\t[duration]\t[size]\t[path]", opList, "output.txt");
+	
 	deleteOPList(opList);
 	fclose(f);
 	return 0;
