@@ -9,6 +9,12 @@ Author: Shu Liu, Jiahao Qian, David Chen
 -   If you want to export the output to a file, please run with `-o [output_filename]`. If the file exists in the "Main" directory, then the filetree will be appended to the bottom, otherwise we will create a newfile with the filetree.
 
 ## Log
+
+### Update Mar 2, 2017
+Jiahao Qian:
+-   print charts for collected data, support printing the whole file/ specific operation within the file/ specfic time period
+
+
 ### Update July 20, 2016
 Shu Liu:
 -   File I/O information included when printing tree
