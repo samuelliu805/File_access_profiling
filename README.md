@@ -10,6 +10,11 @@ Author: Shu Liu, Jiahao Qian, David Chen
 
 ## Log
 
+### Update May 2, 2017
+Jiahao Qian:
+-   Now can handle dup2 system call that previously cannot handle
+-   Updated printing methods. Given the output log file, the python script will create two different types of plots for each file involved
+
 ### Update Mar 2, 2017
 Jiahao Qian:
 -   print charts for collected data, support printing the whole file/ specific operation within the file/ specfic time period

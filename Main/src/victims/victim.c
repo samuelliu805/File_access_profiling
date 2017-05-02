@@ -68,7 +68,6 @@ int compareStr (char* a, int l1, char* b, int l2) {
 // input:	[type]\t[startTime]\t[duration]\t[size]\t[path]
 // output:	open	14:48:55.120775	0.000051	-1	/etc/ld.so.cache
 void printOPList (char *format, operationList *opList, char *fileName) {
-	
 	FILE *f = fopen(fileName, "w");
 	
 	char *flagList[] = {

@@ -54,6 +54,20 @@ char* descriptorMapper (int d, mapList *mp) {
 	return NULL;
 }
 
+char* update (int d, int update, mapList *mp) {
+	map *prev = mp->head, *current;
+	while (prev->next != NULL) {
+		current = prev->next;
+		if (d == current->d){
+			current->d = update;
+			return current->path;
+		}
+		prev = prev->next;
+	}
+	return NULL;
+}
+
+
 void addToMapList (int d, char *path, mapList *mp) {
 	map *m = malloc(sizeof(map));
 	m->d = d;
@@ -93,7 +107,7 @@ operationList* parser (const char *threadFileName) {
 	
 	char *startTime;
 	int type;
-	int fileDescriptor;
+	int fileDescriptor,updatednumber;
 	char *path;
 	unsigned long long int size;
 	double duration;
@@ -127,6 +141,9 @@ operationList* parser (const char *threadFileName) {
 		} else if (strncmp((line + i), "close", 5) == 0) {
 			type = 3;
 			sscanf(line, "%[^ ] %*[^(](%d)%*[^<]<%lf>", startTime, &fileDescriptor, &duration);
+		} else if (strncmp((line + i), "dup2", 4) == 0) {
+			sscanf(line, "%[^ ] %*[^(](%d, %d)%*[^<]<%lf>", startTime, &fileDescriptor,&updatednumber, &duration);
+			path = update(fileDescriptor,updatednumber, mp);
 		} else {
 			type = 4;
 		}
